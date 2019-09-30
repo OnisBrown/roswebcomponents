@@ -915,7 +915,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
     stamp: {
       secs: 1,
       nsecs:1},
-    frame_id: "map"
+    frame_id: "/map"
   };
   position = new ROSLIB.Vector3(null);
   position.x = x;
@@ -970,13 +970,13 @@ function rwcActionCustom(actionComponent){
     // Action name and action server name loaded from rwc-config JSON file
     var serverName = configJSON.actions.actionServers[actionComponent.dataset.action].actionServerName;
     var actionName = configJSON.actions.actionServers[actionComponent.dataset.action].actionName;
-  
+
     var actionClient = new ROSLIB.ActionClient({
       ros: ros,
       serverName: serverName,
       actionName: actionName
     });
-  
+
     currentActionClient = actionClient;
     currentActionTopicString.data = currentActionClient.actionName;
     currentActionTopic.publish(currentActionTopicString);
@@ -985,13 +985,13 @@ function rwcActionCustom(actionComponent){
       actionClient: actionClient,
       goalMessage: msg
     });
-  
+
     goal.on('result', function (status) {
       status = goal.status.status;
       console.log("Action status: " + goalStatusNames[status]);
       if (goalStatusNames[status] !== "PENDING"){freeInterface();}
     });
-  
+
     goal.send();
     busyInterface();
     console.log("Goal '" + serverName + "/goal' sent!");
@@ -1110,7 +1110,7 @@ function rwcActionStartTour(name_or_key, duration=60*60){
 async function rwcListenerGetCurrentPage(listenerComponent = null, returnTopic = false){
   var listener = currentPageTopic;
 
-  
+
 if (returnTopic){
     return listener;
   } else {
