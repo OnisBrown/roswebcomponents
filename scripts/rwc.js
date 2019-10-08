@@ -904,6 +904,10 @@ function rwcActionSay(phrase){
 
 // Action function 'rwcActionGazeAtPosition'
 function rwcActionGazeAtPosition(x, y, z, secs){
+  var currentTime = new Date();
+  var rsecs = Math.floor(currentTime.getTime()/1000);
+  var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
+
   var rwcPoseTopic = new ROSLIB.Topic({
     ros : ros,
     name : configJSON.listeners.gaze.topicName,
@@ -913,8 +917,8 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   header = {
     seq: 0,
     stamp: {
-      secs: 1,
-      nsecs:1},
+      secs: rsecs,
+      nsecs:rnsecs},
     frame_id: "/map"
   };
   position = new ROSLIB.Vector3(null);
