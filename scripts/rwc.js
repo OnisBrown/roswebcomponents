@@ -926,6 +926,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   position.y = y;
   position.z = z;
   orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
+
   var poseStamped = new ROSLIB.Message({
     header: header,
     pose: {
@@ -934,7 +935,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
     }
   });
   rwcPoseTopic.publish(poseStamped);
-  console.log("Gaze pose published...");
+  console.log("Gaze pose published to " + configJSON.listeners.gaze.topicName);
 
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
