@@ -21,6 +21,10 @@
             "gaze": {
                 "actionServerName": "/gaze_at_pose",
                 "actionName": "strands_gazing/GazeAtPoseAction"
+            },
+            "dialogue": {
+                "actionServerName": "/STT",
+                "topicMessageType": "/lindimp_stt/STTActionGoal"
             }
         },
         "topics": {
@@ -35,6 +39,10 @@
         }
     },
     "listeners": {
+        "dialogue": {
+            "topicName": "/STT/Result",
+            "topicMessageType": "/lindimp_stt/STTActionResult"
+        },
         "odom": {
             "topicName": "/odom",
             "topicMessageType": "nav_msgs/Odometry"
