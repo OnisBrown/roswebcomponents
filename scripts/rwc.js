@@ -907,7 +907,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   var currentTime = new Date();
   var rsecs = Math.floor(currentTime.getTime()/1000);
   var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
-
+  console.log("time set: " rsecs + ", " + rnsecs);
   var rwcPoseTopic = new ROSLIB.Topic({
     ros : ros,
     name : configJSON.listeners.gaze.topicName,
@@ -918,7 +918,8 @@ function rwcActionGazeAtPosition(x, y, z, secs){
     seq: 0,
     stamp: {
       secs: rsecs,
-      nsecs:rnsecs},
+      nsecs:rnsecs
+    },
     frame_id: "/map"
   };
   position = new ROSLIB.Vector3(null);
@@ -965,7 +966,6 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   return goal;
 }
 
-
 // Action function 'rwcActionCustom'
 function rwcActionCustom(actionComponent){
   $.getJSON(actionComponent.dataset.goalMsgPath, function(json){
@@ -1004,6 +1004,39 @@ function rwcActionCustom(actionComponent){
     console.log("Action '" + actionComponent.dataset.action + "' started!\nParameter(s): " +
     actionComponent.dataset.actionParameters);
   });
+}
+
+
+//function for starting recording for google dialogue manager.
+function rwcActionStartDialogue(Prompt = "Mic on"){
+  var msg = {
+    goal: {
+      msg: false
+    }
+  }
+  var actionClient = new ROSLIB.ActionClient({
+    ros: ros,
+    serverName: configJSON.actions.actionServers.dialogue.actionServerName,
+    actionName: configJSON.actions.actionServers.dialogue.actionServerName
+  });
+  currentActionClient = actionClient;
+  currentActionTopicString.data = currentActionClient.actionName;
+  currentActionTopic.publish(currentActionTopicString);
+
+  goal = new ROSLIB.Goal({
+    actionClient:actionClient,
+    goalMessage: msg
+  });
+
+  goal.on('result', function(status){
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
+  }
+
+  goal.send();
+  busyInterface();
+  return goal;
 }
 
 // Action function 'rwcActionDescribeExhibit'
@@ -1479,6 +1512,18 @@ function subVolumePercent(listener, listenerComponent = null){
   });
 }
 
+// Listener function 'rwcListnerGetDialogue'
+function rwcListnerGetDialogue(){
+  var transTopic = new ROSLIB.Topic({
+    ros: ros,
+    name: configJSON.listeners.dialogue.topicname,
+    messageType: configJSON.listeners.dialogue.topicMessageType
+  });
+
+  var transcript;
+
+  console.log("Listnening on" + transTopic )
+}
 // Listener function 'rwcListenerGetCameraSnapshot'
 function rwcListenerGetCameraSnapshot(){
   // Latest camera image obtained from 'web_video_server'
