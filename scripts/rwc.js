@@ -1032,8 +1032,7 @@ function rwcActionStartDialogue(Prompt = "Mic on"){
     status = goal.status.status;
     console.log("Action status: " + goalStatusNames[status]);
     if(goalStatusNames[status] !== "PENDING"){freeInterface();}
-  }
-
+  });
   goal.send();
   busyInterface();
   return goal;
