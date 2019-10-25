@@ -989,7 +989,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
     }
   });
   rwcPoseTopic.publish(poseStamped);
-  console.log("Gaze pose published to " + configJSON.listeners.gaze.topicName);
+  console.log("Gaze pose published to " + rwcPoseTopic);
   console.log(poseStamped);
   return goal;
 }
