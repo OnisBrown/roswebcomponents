@@ -1581,8 +1581,8 @@ function subVolumePercent(listener, listenerComponent = null){
   });
 }
 
-// Listener function 'rwcListnerGetDialogue'
-function rwcListenerGetDialogue(){
+// Listener function 'rwcListenerGetDialogue'
+async function rwcListenerGetDialogue(){
   var transTopic = new ROSLIB.Topic({
     ros: ros,
     name: configJSON.listeners.dialogue.topicname,
@@ -1590,8 +1590,7 @@ function rwcListenerGetDialogue(){
   });
 
   console.log("Listnening on" + transTopic );
-  var rwcTranscript = await subDialogue(listener);
-
+//  var rwcTranscript = await subDialogue(listener);
   return rwcTranscript;
 }
 
