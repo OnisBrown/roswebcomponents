@@ -1589,10 +1589,33 @@ function rwcListnerGetDialogue(){
     messageType: configJSON.listeners.dialogue.topicMessageType
   });
 
-  var transcript;
+  console.log("Listnening on" + transTopic );
+  var rwcTranscript = await subDialogue(listener);
 
-  console.log("Listnening on" + transTopic )
+  return rwcTranscript;
 }
+
+function subDialogue(listener, listenerComponent = null){
+  return new Promise(function(resolve) {
+    listener.subscribe(function(message) {
+      var rwcTranscript = message;
+      if (listenerComponent === null){
+        listener.unsubscribe();
+      }
+      else if (listenerComponent.dataset.live === "false"){
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcVolumePercent + "</span>";
+        listener.unsubscribe();
+      }
+      else {
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcVolumePercent + "</span>";
+      }
+      setTimeout(function(){
+        resolve(rwcTranscript);
+      }, 50);
+    });
+  });
+}
+
 // Listener function 'rwcListenerGetCameraSnapshot'
 function rwcListenerGetCameraSnapshot(){
   // Latest camera image obtained from 'web_video_server'
