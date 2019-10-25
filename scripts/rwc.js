@@ -370,7 +370,7 @@ $(document).ready(function(){
 
 // Connection to ROSbridge server websocket
 var ros = new ROSLIB.Ros({
-    url: configJSON.rosbridge_websocket_url
+    url: "10.82.0.70:9090"
 });
 
 ros.on('connection', function(){
