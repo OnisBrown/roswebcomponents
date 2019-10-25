@@ -904,6 +904,31 @@ function rwcActionSay(phrase){
 
 // Action function 'rwcActionGazeAtPosition'
 function rwcActionGazeAtPosition(x, y, z, secs){
+  var gazeActionClient = new ROSLIB.ActionClient({
+    ros: ros,
+    serverName: configJSON.actions.actionServers.gaze.actionServerName,
+    actionName: configJSON.actions.actionServers.gaze.actionName
+  });
+
+  currentActionClient = gazeActionClient;
+
+  msg = {
+    runtime_sec: secs,
+    topic_name: configJSON.listeners.gaze.topicName
+  };
+
+  goal = new ROSLIB.Goal({
+    actionClient: gazeActionClient,
+    goalMessage: msg
+  });
+
+  goal.on('result', function (status) {
+    console.log("Action " + configJSON.actions.actionServers.gaze.actionServerName + " completed!");
+  });
+
+  goal.send();
+  console.log("Goal " + configJSON.actions.actionServers.gaze.actionServerName + "/goal sent!");
+
   var currentTime = new Date();
   var rsecs = Math.floor(currentTime.getTime()/1000);
   var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
@@ -938,31 +963,6 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   rwcPoseTopic.publish(poseStamped);
   console.log("Gaze pose published to " + configJSON.listeners.gaze.topicName);
   console.log(poseStamped);
-  var gazeActionClient = new ROSLIB.ActionClient({
-    ros: ros,
-    serverName: configJSON.actions.actionServers.gaze.actionServerName,
-    actionName: configJSON.actions.actionServers.gaze.actionName
-  });
-
-  currentActionClient = gazeActionClient;
-
-  msg = {
-    runtime_sec: secs,
-    topic_name: configJSON.listeners.gaze.topicName
-  };
-
-  goal = new ROSLIB.Goal({
-    actionClient: gazeActionClient,
-    goalMessage: msg
-  });
-
-  goal.on('result', function (status) {
-    console.log("Action " + configJSON.actions.actionServers.gaze.actionServerName + " completed!");
-  });
-
-  goal.send();
-  console.log("Goal " + configJSON.actions.actionServers.gaze.actionServerName + "/goal sent!");
-
   return goal;
 }
 
