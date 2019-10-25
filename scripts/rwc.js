@@ -1582,7 +1582,7 @@ function subVolumePercent(listener, listenerComponent = null){
 }
 
 // Listener function 'rwcListnerGetDialogue'
-function rwcListnerGetDialogue(){
+function rwcListenerGetDialogue(){
   var transTopic = new ROSLIB.Topic({
     ros: ros,
     name: configJSON.listeners.dialogue.topicname,
