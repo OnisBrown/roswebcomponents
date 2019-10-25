@@ -937,7 +937,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   });
   rwcPoseTopic.publish(poseStamped);
   console.log("Gaze pose published to " + configJSON.listeners.gaze.topicName);
-
+  console.log(poseStamped);
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
     serverName: configJSON.actions.actionServers.gaze.actionServerName,
