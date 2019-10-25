@@ -913,7 +913,7 @@ function rwcActionGazeAtNearestPerson(secs){
 
   msg = {
     runtime_sec: secs,
-    topic_name: configJSON.listeners.nearest_person_pose.topicName;
+    topic_name: configJSON.listeners.nearest_person_pose.topicName
   };
 
   goal = new ROSLIB.Goal({
