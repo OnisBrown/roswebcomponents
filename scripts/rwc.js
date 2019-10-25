@@ -1383,6 +1383,48 @@ async function rwcListenerGetNumberOfPeople(listenerComponent = null, returnTopi
   }
 }
 
+// Listener function 'rwcListenerGetPeoplePositions'
+async function rwcListenergetnearestDist(listenerComponent = null, returnTopic = false){
+  // Topic info loaded from rwc-config JSON file
+  var listener = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.nearest_person_dist.topicName,
+    messageType : configJSON.listeners.nearest_person_dist.topicMessageType
+  });
+
+  if (returnTopic){
+    return listener;
+  } else {
+    // promise function called and function execution halts until
+    // the promise is resolved
+    rwcNearestDist = await subPeopleDist(listener, listenerComponent);
+    return rwcNearestDist;
+  }
+}
+
+// Promise returns value 50ms after subscribing to topic,
+// preventing old or undefined values from being returned
+function subPeopleDist(listener, listenerComponent = null){
+  return new Promise(function(resolve) {
+    listener.subscribe(function(message) {
+      rwcNearestDist = message.min_distance;
+      if (listenerComponent === null){
+        listener.unsubscribe();
+      }
+      else if (listenerComponent.dataset.live === "false"){
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcPeoplePositions + "</span>";
+        listener.unsubscribe();
+      }
+      else {
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcPeoplePositions + "</span>";
+      }
+      setTimeout(function(){
+        resolve(rwcNearestDist);
+      }, 50);
+    });
+  });
+}
+
 // Listener function 'rwcListenerGetNode'
 async function rwcListenerGetNode(listenerComponent = null, returnTopic = false){
   // Topic info loaded from rwc-config JSON file
