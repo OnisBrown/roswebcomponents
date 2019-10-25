@@ -988,13 +988,12 @@ function rwcActionGazeAtPosition(x, y, z, secs){
       orientation: orientation
     }
   });
-  rwcPoseTopic.subscribe(function(data){
-    rwcPoseTopic.publish(poseStamped);
-    console.log("Gaze pose published to " + JSON.stringify(rwcPoseTopic));
-    console.log(poseStamped);
-    console.log(data);
-    rwcPoseTopic.unsubscribe();
-  });
+
+  rwcPoseTopic.publish(poseStamped);
+  console.log("Gaze pose published to " + rwcPoseTopic.name);
+  console.log(poseStamped);
+  console.log(msg.data);
+  rwcPoseTopic.unsubscribe();
 
   return goal;
 }
