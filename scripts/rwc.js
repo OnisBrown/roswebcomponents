@@ -20,7 +20,7 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
 
   // Set rosbridge_websocket URL
   ros = new ROSLIB.Ros({
-    url: configJSON["rosbridge_websocket_url"]
+    url: configJSON.rosbridge_websocket_url;
   });
   console.log("rosbridge_websocket URL: " +  ros.socket.url);
 
