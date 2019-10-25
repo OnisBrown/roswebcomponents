@@ -990,9 +990,8 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   });
 
   rwcPoseTopic.publish(poseStamped);
-  console.log("Gaze pose published to " + rwcPoseTopic.name);
+  console.log("Gaze pose published to " + rwcPoseTopic.name + "\n" + rwcPoseTopic.messageType);
   console.log(poseStamped);
-  console.log(msg.data);
   rwcPoseTopic.unsubscribe();
 
   return goal;
