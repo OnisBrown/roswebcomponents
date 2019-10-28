@@ -16,6 +16,7 @@ var speakGoalTopic;
 var speakResultTopic;
 var speakCancelTopic;
 var rwcPoseTopic;
+
 var JSONreq = $.getJSON("rwc-config.json", function(json){
   configJSON = json;
 
@@ -77,6 +78,33 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
     console.log('listener_speech_result msg.result='+msg);
     Receive_robot_speech_result();
   });
+
+  //initial publication of '/rwc/gaze_pose'
+  header = {
+    stamp: {
+      secs: 0,
+      nsecs:0
+    },
+    frame_id: "/map",
+    seq: 0
+  };
+  position = new ROSLIB.Vector3(null);
+  position.x = 0;
+  position.y = 0;
+  position.z = 0;
+  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
+  var poseStamped = new ROSLIB.Message({
+    header: header,
+    pose: {
+      position: position,
+      orientation: orientation
+    }
+  });
+
+  rwcPoseTopic.publish(poseStamped);
+
+
+
 });
 
 // Dictionary of listener functions, for matching 'data-listener' listener names to
@@ -242,30 +270,6 @@ $(document).ready(function(){
       }
     });
   });
-
-  //initial publication of '/rwc/gaze_pose'
-  header = {
-    stamp: {
-      secs: 0,
-      nsecs:0
-    },
-    frame_id: "/map",
-    seq: 0
-  };
-  position = new ROSLIB.Vector3(null);
-  position.x = 0;
-  position.y = 0;
-  position.z = 0;
-  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-  var poseStamped = new ROSLIB.Message({
-    header: header,
-    pose: {
-      position: position,
-      orientation: orientation
-    }
-  });
-  rwcPoseTopic.publish(poseStamped);
-
 
   // Initial publication of '/rwc/current_page'
   currentPageTopicString.data = window.rwcCurrentPage;
