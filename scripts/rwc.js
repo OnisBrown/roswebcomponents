@@ -1053,7 +1053,7 @@ function rwcActionStartDialogue(){
     serverName: serverName,
     actionName: actionName
   });
-
+  console.log(actionClient);
   currentActionClient = actionClient;
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
