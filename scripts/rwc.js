@@ -15,6 +15,7 @@ var taskEventsTopic;
 var speakGoalTopic;
 var speakResultTopic;
 var speakCancelTopic;
+var rwcPoseTopic;
 var JSONreq = $.getJSON("rwc-config.json", function(json){
   configJSON = json;
 
@@ -28,6 +29,12 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
   $.getJSON("exhibitors_definition.json",
   function(json){
     exhibitorsJSON = json;
+  });
+
+  rwcPoseTopic = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.gaze.topicName,
+    messageType : configJSON.listeners.gaze.topicMessageType
   });
 
   // ROS topic for tracking task events, `/task_executor/events`
@@ -237,11 +244,6 @@ $(document).ready(function(){
   });
 
   //initial publication of '/rwc/gaze_pose'
-  var rwcPoseTopic = new ROSLIB.Topic({
-    ros : ros,
-    name : configJSON.listeners.gaze.topicName,
-    messageType : configJSON.listeners.gaze.topicMessageType
-  });
   header = {
     stamp: {
       secs: 0,
@@ -1013,7 +1015,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   position.y = y;
   position.z = z;
   //orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-  
+
   // position = {
   //   x: x,
   //   y: y,
