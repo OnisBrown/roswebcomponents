@@ -1043,17 +1043,17 @@ function rwcActionCustom(actionComponent){
 //function for starting recording for google dialogue manager.
 function rwcActionStartDialogue(){
   var msg = {
-    goal: {
-      msg: false
-    }
+    msg: false
   }
   var serverName = configJSON.actions.actionServers.dialogue.actionServerName;
   var actionName = configJSON.actions.actionServers.dialogue.actionName
+
   var actionClient = new ROSLIB.ActionClient({
     ros: ros,
     serverName: serverName,
     actionName: actionName
   });
+
   currentActionClient = actionClient;
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
