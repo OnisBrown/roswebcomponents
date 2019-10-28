@@ -903,10 +903,12 @@ function rwcActionSay(phrase){
 }
 
 function rwcActionGazeAtNearestPerson(secs){
+  var serverName = configJSON.actions.actionServers.gaze.actionServerName;
+  var actionName = configJSON.actions.actionServers.gaze.actionServerName;
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
-    serverName: configJSON.actions.actionServers.gaze.actionServerName,
-    actionName: configJSON.actions.actionServers.gaze.actionName
+    serverName: serverName,
+    actionName: actionName
   });
 
   currentActionClient = gazeActionClient;
@@ -922,20 +924,22 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   goal.on('result', function (status) {
-    console.log("Action " + configJSON.actions.actionServers.gaze.actionServerName + " completed!");
+    console.log("Action " + serverName + " completed!");
   });
 
   goal.send();
-  console.log("Goal " + configJSON.actions.actionServers.gaze.actionServerName + "/goal sent!");
+  console.log("Action " + serverName + " completed!");
   return goal;
 }
 
 // Action function 'rwcActionGazeAtPosition'
 function rwcActionGazeAtPosition(x, y, z, secs){
+  var serverName = configJSON.actions.actionServers.gaze.actionServerName;
+  var actionName = configJSON.actions.actionServers.gaze.actionServerName;
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
-    serverName: configJSON.actions.actionServers.gaze.actionServerName,
-    actionName: configJSON.actions.actionServers.gaze.actionName
+    serverName: serverName,
+    actionName: actionName
   });
 
   currentActionClient = gazeActionClient;
@@ -951,11 +955,11 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   });
 
   goal.on('result', function (status) {
-    console.log("Action " + configJSON.actions.actionServers.gaze.actionServerName + " completed!");
+    console.log("Action " + serverName + " completed!");
   });
 
   goal.send();
-  console.log("Goal " + configJSON.actions.actionServers.gaze.actionServerName + "/goal sent!");
+  console.log("Goal " + serverName + "/goal sent!");
 
   var currentTime = new Date();
   var rsecs = Math.floor(currentTime.getTime()/1000);
@@ -1039,12 +1043,13 @@ function rwcActionCustom(actionComponent){
 
 
 //function for starting recording for google dialogue manager.
-function rwcActionStartDialogue(Prompt = "Mic on"){
+function rwcActionStartDialogue(){
   var msg = {
     goal: {
       msg: false
     }
   }
+
   var actionClient = new ROSLIB.ActionClient({
     ros: ros,
     serverName: configJSON.actions.actionServers.dialogue.actionServerName,
@@ -1592,7 +1597,7 @@ async function rwcListenerGetDialogue(){
     messageType: configJSON.listeners.dialogue.topicMessageType
   });
 
-  console.log("Listnening on" + transTopic );
+  console.log("Listnening on" + JSON.stringify(transTopic) );
   var rwcTranscript = await subDialogue(transTopic);
   return rwcTranscript;
 }
