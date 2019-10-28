@@ -960,54 +960,57 @@ function rwcActionGazeAtPosition(x, y, z, secs){
 
   goal.send();
   console.log("Goal " + serverName + "/goal sent!");
+  subGazeAtPosition(x,y,z);
+  return goal;
+}
 
-  var currentTime = new Date();
-  var rsecs = Math.floor(currentTime.getTime()/1000);
-  var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
+function subGazeAtPosition(x,y,z){
   console.log("time set: " + rsecs + ", " + rnsecs);
   var rwcPoseTopic = new ROSLIB.Topic({
     ros : ros,
     name : configJSON.listeners.gaze.topicName,
     messageType : configJSON.listeners.gaze.topicMessageType
   });
-
-  header = {
-    stamp: {
-      secs: rsecs,
-      nsecs:rnsecs
-    },
-    frame_id: "/map",
-    seq: 0
-  };
-  position = new ROSLIB.Vector3(null);
-  position.x = x;
-  position.y = y;
-  position.z = z;
-  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-  // position = {
-  //   x: x,
-  //   y: y,
-  //   z: z
+  // header = {
+  //   seq: 0,
+  //   stamp: {
+  //     secs: rsecs,
+  //     nsecs:rnsecs
+  //   },
+  //   frame_id: "/map"
   // };
-
-  // orientation = {
-  //   x:0,
-  //   y:0,
-  //   z:0,
-  //   w:1.0
-  // }
+  // position = new ROSLIB.Vector3(null);
+  // position.x = x;
+  // position.y = y;
+  // position.z = z;
+  // orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
   var poseStamped = new ROSLIB.Message({
-    header: header,
+    header: {
+      seq: 0,
+      stamp: {
+        secs: 0,
+        nsecs: 0
+      },
+      frame_id: "/map"
+    },
     pose: {
-      position: position,
-      orientation: orientation
+      position: {
+        x: x,
+        y: y,
+        z: z
+      },
+      orientation: {
+        x:0,
+        y:0,
+        z:0,
+        w:1.0
+      }
     }
   });
 
   rwcPoseTopic.publish(poseStamped);
   console.log("Gaze pose published to " + rwcPoseTopic.name + "\n" + rwcPoseTopic.messageType);
   console.log(poseStamped);
-  return goal;
 }
 
 // Action function 'rwcActionCustom'
