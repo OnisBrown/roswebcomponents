@@ -1136,7 +1136,7 @@ function rwcActionGoToAndDescribeExhibit(name_or_key, duration=60*30){
       taskEventsTopic.unsubscribe();
       goal.dispatchEvent(resultEvent);
     }
-  });
+  });Dialogue
   return $(goal);
 };
 
@@ -1593,7 +1593,7 @@ async function rwcListenerGetDialogue(){
   });
 
   console.log("Listnening on" + transTopic );
-//  var rwcTranscript = await subDialogue(listener);
+  var rwcTranscript = await subDialogue(listener);
   return rwcTranscript;
 }
 
@@ -1603,13 +1603,6 @@ function subDialogue(listener, listenerComponent = null){
       var rwcTranscript = message;
       if (listenerComponent === null){
         listener.unsubscribe();
-      }
-      else if (listenerComponent.dataset.live === "false"){
-        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcVolumePercent + "</span>";
-        listener.unsubscribe();
-      }
-      else {
-        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcVolumePercent + "</span>";
       }
       setTimeout(function(){
         resolve(rwcTranscript);
