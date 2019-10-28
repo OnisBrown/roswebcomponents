@@ -96,8 +96,8 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
   var poseStamped = new ROSLIB.Message({
     header: header,
     pose: {
-      position: position,
-      orientation: orientation
+      orientation: orientation,
+      position: position
     }
   });
 
