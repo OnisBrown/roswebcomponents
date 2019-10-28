@@ -1045,7 +1045,7 @@ function rwcActionStartDialogue(){
   var msg = {
     msg: false
   }
-  console.log(msg)
+  console.log(msg);
   var serverName = configJSON.actions.actionServers.dialogue.actionServerName;
   var actionName = configJSON.actions.actionServers.dialogue.actionName
 
