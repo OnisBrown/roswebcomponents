@@ -965,7 +965,6 @@ function rwcActionGazeAtPosition(x, y, z, secs){
 }
 
 function subGazeAtPosition(x,y,z){
-  console.log("time set: " + rsecs + ", " + rnsecs);
   var rwcPoseTopic = new ROSLIB.Topic({
     ros : ros,
     name : configJSON.listeners.gaze.topicName,
