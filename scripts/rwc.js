@@ -1049,11 +1049,12 @@ function rwcActionStartDialogue(){
       msg: false
     }
   }
-
+  var serverName = configJSON.actions.actionServers.dialogue.actionServerName;
+  var actionName = configJSON.actions.actionServers.dialogue.actionName
   var actionClient = new ROSLIB.ActionClient({
     ros: ros,
-    serverName: configJSON.actions.actionServers.dialogue.actionServerName,
-    actionName: configJSON.actions.actionServers.dialogue.actionServerName
+    serverName: serverName,
+    actionName: actionName
   });
   currentActionClient = actionClient;
   currentActionTopicString.data = currentActionClient.actionName;
@@ -1071,6 +1072,7 @@ function rwcActionStartDialogue(){
   });
   goal.send();
   busyInterface();
+  console.log("Goal '" + serverName + "/goal' sent!");
   return goal;
 }
 
