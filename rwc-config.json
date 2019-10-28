@@ -24,7 +24,7 @@
             },
             "dialogue": {
                 "actionServerName": "/stt_server",
-                "actionName": "lindimp_stt/STTAction"
+                "actionName": "lindimp_stt/STTActionGoal"
             }
         },
         "topics": {
