@@ -236,6 +236,35 @@ $(document).ready(function(){
     });
   });
 
+  //initial publication of '/rwc/gaze_pose'
+  var rwcPoseTopic = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.gaze.topicName,
+    messageType : configJSON.listeners.gaze.topicMessageType
+  });
+  header = {
+    stamp: {
+      secs: 0,
+      nsecs:0
+    },
+    frame_id: "/map",
+    seq: 0
+  };
+  position = new ROSLIB.Vector3(null);
+  position.x = 0;
+  position.y = 0;
+  position.z = 0;
+  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
+  var poseStamped = new ROSLIB.Message({
+    header: header,
+    pose: {
+      position: position,
+      orientation: orientation
+    }
+  });
+  rwcPoseTopic.publish(poseStamped);
+
+
   // Initial publication of '/rwc/current_page'
   currentPageTopicString.data = window.rwcCurrentPage;
   currentPageTopic.publish(currentPageTopicString);
@@ -961,29 +990,30 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   goal.send();
   console.log("Goal " + serverName + "/goal sent!");
 
+
+  //start creating message for /rwc/gaze_pose
   var currentTime = new Date();
   var rsecs = Math.floor(currentTime.getTime()/1000);
   var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
   console.log("time set: " + rsecs + ", " + rnsecs);
-  var rwcPoseTopic = new ROSLIB.Topic({
-    ros : ros,
-    name : configJSON.listeners.gaze.topicName,
-    messageType : configJSON.listeners.gaze.topicMessageType
-  });
 
-  header = {
-    stamp: {
-      secs: rsecs,
-      nsecs:rnsecs
-    },
-    frame_id: "/map",
-    seq: 0
-  };
-  position = new ROSLIB.Vector3(null);
+  // header = {
+  //   stamp: {
+  //     secs: rsecs,
+  //     nsecs:rnsecs
+  //   },
+  //   frame_id: "/map",
+  //   seq: 0
+  // };
+  header.stamp.secs = rsecs;
+  header.stamp.secs = rnsecs;
+  header.seq += 1;
+  //position = new ROSLIB.Vector3(null);
   position.x = x;
   position.y = y;
   position.z = z;
-  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
+  //orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
+  
   // position = {
   //   x: x,
   //   y: y,
