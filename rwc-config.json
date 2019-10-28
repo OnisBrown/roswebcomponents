@@ -23,7 +23,7 @@
                 "actionName": "strands_gazing/GazeAtPoseAction"
             },
             "dialogue": {
-                "actionServerName": "/STT",
+                "actionServerName": "/stt_server",
                 "actionName": "lindimp_stt/STTAction"
             }
         },
