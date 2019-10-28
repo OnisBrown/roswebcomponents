@@ -40,7 +40,7 @@
     },
     "listeners": {
         "dialogue": {
-            "topicName": "/STT/Result",
+            "topicName": "/STT/result",
             "topicMessageType": "/lindimp_stt/STTActionResult"
         },
         "odom": {
