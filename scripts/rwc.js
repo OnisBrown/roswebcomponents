@@ -15,8 +15,6 @@ var taskEventsTopic;
 var speakGoalTopic;
 var speakResultTopic;
 var speakCancelTopic;
-var rwcPoseTopic;
-
 var JSONreq = $.getJSON("rwc-config.json", function(json){
   configJSON = json;
 
@@ -30,12 +28,6 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
   $.getJSON("exhibitors_definition.json",
   function(json){
     exhibitorsJSON = json;
-  });
-
-  rwcPoseTopic = new ROSLIB.Topic({
-    ros : ros,
-    name : configJSON.listeners.gaze.topicName,
-    messageType : configJSON.listeners.gaze.topicMessageType
   });
 
   // ROS topic for tracking task events, `/task_executor/events`
@@ -78,33 +70,6 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
     console.log('listener_speech_result msg.result='+msg);
     Receive_robot_speech_result();
   });
-
-  //initial publication of '/rwc/gaze_pose'
-  header = {
-    stamp: {
-      secs: 0,
-      nsecs:0
-    },
-    frame_id: "/map",
-    seq: 0
-  };
-  position = new ROSLIB.Vector3(null);
-  position.x = 0;
-  position.y = 0;
-  position.z = 0;
-  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-  var poseStamped = new ROSLIB.Message({
-    header: header,
-    pose: {
-      orientation: orientation,
-      position: position
-    }
-  });
-
-  rwcPoseTopic.publish(poseStamped);
-
-
-
 });
 
 // Dictionary of listener functions, for matching 'data-listener' listener names to
@@ -996,30 +961,29 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   goal.send();
   console.log("Goal " + serverName + "/goal sent!");
 
-
-  //start creating message for /rwc/gaze_pose
   var currentTime = new Date();
   var rsecs = Math.floor(currentTime.getTime()/1000);
   var rnsecs = Math.round(1000000000*(currentTime.getTime()/1000-secs));
   console.log("time set: " + rsecs + ", " + rnsecs);
+  var rwcPoseTopic = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.gaze.topicName,
+    messageType : configJSON.listeners.gaze.topicMessageType
+  });
 
-  // header = {
-  //   stamp: {
-  //     secs: rsecs,
-  //     nsecs:rnsecs
-  //   },
-  //   frame_id: "/map",
-  //   seq: 0
-  // };
-  header.stamp.secs = rsecs;
-  header.stamp.secs = rnsecs;
-  header.seq += 1;
-  //position = new ROSLIB.Vector3(null);
+  header = {
+    stamp: {
+      secs: rsecs,
+      nsecs:rnsecs
+    },
+    frame_id: "/map",
+    seq: 0
+  };
+  position = new ROSLIB.Vector3(null);
   position.x = x;
   position.y = y;
   position.z = z;
-  //orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-
+  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
   // position = {
   //   x: x,
   //   y: y,
