@@ -1593,7 +1593,7 @@ async function rwcListenerGetDialogue(){
   });
 
   console.log("Listnening on" + transTopic );
-  var rwcTranscript = await subDialogue(listener);
+  var rwcTranscript = await subDialogue(transTopic);
   return rwcTranscript;
 }
 
