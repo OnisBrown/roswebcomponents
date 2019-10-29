@@ -931,7 +931,6 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   goal.send();
-  console.log("Action " + serverName + " completed!");
   return goal;
 }
 
