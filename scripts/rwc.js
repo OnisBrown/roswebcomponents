@@ -994,12 +994,12 @@ function subGazeAtPosition(x,y,z){
     }
   });
 
-  var secs = 1;
+  var secs = 0.5;
   var timer = 0;
   var limit = secs*10;
   pubRate = setInterval(pubby, 100);
 
-  function pubby(){
+  function pubby(){ //publish the pose 10 times a second for a number of seconds.
     rwcPoseTopic.publish(poseStamped);
     timer+=1;
     if (timer == limit){
