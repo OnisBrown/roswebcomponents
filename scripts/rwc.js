@@ -912,6 +912,8 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   currentActionClient = gazeActionClient;
+  currentActionTopicString.data = currentActionClient.actionName;
+  currentActionTopic.publish(currentActionTopicString);
 
   msg = {
     runtime_sec: secs,
@@ -944,6 +946,8 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   });
 
   currentActionClient = gazeActionClient;
+  currentActionTopicString.data = currentActionClient.actionName;
+  currentActionTopic.publish(currentActionTopicString);
 
   msg = {
     runtime_sec: secs,
