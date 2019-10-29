@@ -924,7 +924,9 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   goal.on('result', function (status) {
-    console.log("Action " + serverName + " completed!");
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -955,7 +957,9 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   });
 
   goal.on('result', function (status) {
-    console.log("Action " + serverName + " completed!");
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
