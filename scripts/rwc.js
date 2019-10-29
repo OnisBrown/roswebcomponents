@@ -1007,7 +1007,19 @@ function subGazeAtPosition(x,y,z){
     }
   });
 
-  rwcPoseTopic.publish(poseStamped);
+  var secs = 1;
+  var timer = 0;
+  var limit = secs*10;
+  pubRate = setInterval(pubby, 100);
+
+  function pubby(){
+    rwcPoseTopic.publish(poseStamped);
+    timer+=1;
+    if (timer == limit){
+      clearInterval(pubRate);
+    }
+  }
+
   console.log("Gaze pose published to " + rwcPoseTopic.name + "\n" + rwcPoseTopic.messageType);
   console.log(poseStamped);
 }
