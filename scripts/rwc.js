@@ -726,8 +726,9 @@ function rwcActionSetPoseRelative(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}
   });
 
   goal.on('result', function (status) {
-    console.log(goal.status.text);
-    freeInterface();
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -776,8 +777,9 @@ function rwcActionSetPoseMap(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}){
   });
 
   goal.on('result', function (status) {
-    console.log(goal.status.text);
-    freeInterface();
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -816,8 +818,8 @@ function rwcActionGoToNode(node_name, no_orientation = false){
 
   goal.on('result', function (status) {
     status = goal.status.status;
-    console.log("Action status: " + goalStatusNames[status]);
     if (goalStatusNames[status] !== "PENDING"){freeInterface();}
+    console.log("Action status: " + goalStatusNames[status]);
   });
 
   goal.send();
@@ -894,6 +896,7 @@ function rwcActionSay(phrase){
   goal.on('result', function (status) {
     status = goal.status.status;
     console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -905,6 +908,7 @@ function rwcActionSay(phrase){
 function rwcActionGazeAtNearestPerson(secs){
   var serverName = configJSON.actions.actionServers.gaze.actionServerName;
   var actionName = configJSON.actions.actionServers.gaze.actionServerName;
+
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
     serverName: serverName,
@@ -926,11 +930,13 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   goal.on('result', function (status) {
-    status = goal.status.status;
+    status = goal.status;
     console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
+  console.log("Goal '" + serverName + "/goal' sent!");
   return goal;
 }
 
@@ -961,6 +967,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
   goal.on('result', function (status) {
     status = goal.status.status;
     console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
