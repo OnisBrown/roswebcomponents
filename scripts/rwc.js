@@ -1066,8 +1066,8 @@ function rwcActionCustom(actionComponent){
 function rwcActionStartDialogue(){
   var startDiaTop = new ROSLIB.Topic({
     ros : ros,
-    name : configJSON.actions.dialogue.topicName,
-    messageType : configJSON.actions.dialogue.topicMessageType
+    name : configJSON.actions.topics.dialogue.topicName,
+    messageType : configJSON.actions.topics.dialogue.topicMessageType
   });
 
   var msg8 = new ROSLIB.Message({
