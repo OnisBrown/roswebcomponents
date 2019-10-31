@@ -1617,7 +1617,7 @@ async function rwcListenerGetDialogue(){
     messageType: configJSON.listeners.dialogue.topicMessageType
   });
 
-  console.log("Listnening on" + JSON.stringify(transTopic) );
+  console.log("Thinking...");
   var rwcTranscript = await subDialogue(transTopic);
   return rwcTranscript;
 }
@@ -1630,6 +1630,7 @@ function subDialogue(listener, listenerComponent = null){
         listener.unsubscribe();
       }
       setTimeout(function(){
+        console.log("you said: " + rwcTranscript);
         resolve(rwcTranscript);
       }, 50);
     });
