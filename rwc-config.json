@@ -21,7 +21,7 @@
             "gaze": {
                 "actionServerName": "/gaze_at_pose",
                 "actionName": "strands_gazing/GazeAtPoseAction"
-            },
+            }
         },
         "topics": {
             "dialogue": {
