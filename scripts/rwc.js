@@ -901,7 +901,6 @@ function rwcActionSay(phrase){
 
   goal.send();
   console.log("Goal '" + serverName + "/goal' sent!");
-
   return goal;
 }
 
@@ -930,7 +929,7 @@ function rwcActionGazeAtNearestPerson(secs){
   });
 
   goal.on('result', function (status) {
-    status = goal.status;
+    status = goal.status.status;
     console.log("Action status: " + goalStatusNames[status]);
     if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
@@ -1065,37 +1064,34 @@ function rwcActionCustom(actionComponent){
 
 //function for starting recording for google dialogue manager.
 function rwcActionStartDialogue(){
-  var msg = {
-    msg: false
-  }
-  console.log(msg);
-  var serverName = configJSON.actions.actionServers.dialogue.actionServerName;
-  var actionName = configJSON.actions.actionServers.dialogue.actionName
-
-  var actionClient = new ROSLIB.ActionClient({
-    ros: ros,
-    serverName: serverName,
-    actionName: actionName
-  });
-  console.log(actionClient);
-  currentActionClient = actionClient;
-  currentActionTopicString.data = currentActionClient.actionName;
-  currentActionTopic.publish(currentActionTopicString);
-
-  goal = new ROSLIB.Goal({
-    actionClient:actionClient,
-    goalMessage: msg
+  var startDiaTop = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.actions.dialogue.topicName,
+    messageType : configJSON.actions.dialogue.topicMessageType
   });
 
-  goal.on('result', function(status){
-    status = goal.status.status;
-    console.log("Action status: " + goalStatusNames[status]);
-    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
+  var msg8 = new ROSLIB.Message({
+    header:{
+      seq: 0,
+      stamp:{
+        secs: 0,
+        nsecs: 0
+      },
+      frame_id: '',
+    },
+    goal_id:{
+      stamp:{
+        secs: 0,
+        nsecs: 0
+      },
+      id: ''
+    },
+    goal:{
+      msg: false
+    }
   });
-  goal.send();
-  busyInterface();
-  console.log("Goal '" + serverName + "/goal' sent!");
-  return goal;
+  startDiaTop.publish();
+  console.log("Listnening......");
 }
 
 // Action function 'rwcActionDescribeExhibit'
@@ -1165,7 +1161,7 @@ function rwcActionGoToAndDescribeExhibit(name_or_key, duration=60*30){
       taskEventsTopic.unsubscribe();
       goal.dispatchEvent(resultEvent);
     }
-  });Dialogue
+  });
   return $(goal);
 };
 
@@ -1629,7 +1625,7 @@ async function rwcListenerGetDialogue(){
 function subDialogue(listener, listenerComponent = null){
   return new Promise(function(resolve) {
     listener.subscribe(function(message) {
-      var rwcTranscript = message;
+      var rwcTranscript = message.result.transcription;
       if (listenerComponent === null){
         listener.unsubscribe();
       }

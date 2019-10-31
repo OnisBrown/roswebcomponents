@@ -22,12 +22,12 @@
                 "actionServerName": "/gaze_at_pose",
                 "actionName": "strands_gazing/GazeAtPoseAction"
             },
-            "dialogue": {
-                "actionServerName": "/stt_server",
-                "actionName": "lindimp_stt/STTActionGoal"
-            }
         },
         "topics": {
+            "dialogue": {
+                "topicName": "/STT",
+                "topicMessageType": "lindimp_stt/STTActionGoal"
+            }
             "volumeChange": {
                 "topicName": "/volume/percentChange",
                 "topicMessageType": "std_msgs/Int8"
