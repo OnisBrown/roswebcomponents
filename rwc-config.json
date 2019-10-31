@@ -27,7 +27,7 @@
             "dialogue": {
                 "topicName": "/STT",
                 "topicMessageType": "lindimp_stt/STTActionGoal"
-            }
+            },
             "volumeChange": {
                 "topicName": "/volume/percentChange",
                 "topicMessageType": "std_msgs/Int8"
