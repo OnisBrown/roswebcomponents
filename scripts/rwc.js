@@ -1439,8 +1439,8 @@ async function rwcListenerGetNumberOfPeople(listenerComponent = null, returnTopi
   }
 }
 
-// Listener function 'rwcListenerGetPeoplePositions'
-async function rwcListenergetnearestDist(listenerComponent = null, returnTopic = false){
+// Listener function 'rwcListenerGetnearestDist'
+async function rwcListenerGetNearestDist(listenerComponent = null, returnTopic = false){
   // Topic info loaded from rwc-config JSON file
   var listener = new ROSLIB.Topic({
     ros : ros,
