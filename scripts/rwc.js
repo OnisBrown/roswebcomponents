@@ -350,12 +350,12 @@ $(document).ready(function(){
   document.body.appendChild(modalDiv);
 
   // Create and append stop button
-  stopButton = document.createElement("div");
-  stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
-  stopButton.setAttribute("style", "z-index: 9999;");
-  stopButtonSpan = document.createElement("span");
-  stopButtonSpan.innerHTML = "Cancel action";
-  stopButton.appendChild(stopButtonSpan);
+  // stopButton = document.createElement("div");
+  // stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
+  // stopButton.setAttribute("style", "z-index: 9999;");
+  // stopButtonSpan = document.createElement("span");
+  // stopButtonSpan.innerHTML = "Cancel action";
+  // stopButton.appendChild(stopButtonSpan);
   if(isPhone){
     stopButton.addEventListener('touchstart', function(event){
       cancelCurrentAction();
@@ -1619,6 +1619,7 @@ async function rwcListenerGetDialogue(){
 
   console.log("Thinking...");
   var rwcTranscript = await subDialogue(transTopic);
+  console.log("Transcript recieved.")
   return rwcTranscript;
 }
 
