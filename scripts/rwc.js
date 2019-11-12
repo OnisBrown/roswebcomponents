@@ -350,23 +350,23 @@ $(document).ready(function(){
   document.body.appendChild(modalDiv);
 
   // Create and append stop button
-  // stopButton = document.createElement("div");
-  // stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
-  // stopButton.setAttribute("style", "z-index: 9999;");
-  // stopButtonSpan = document.createElement("span");
-  // stopButtonSpan.innerHTML = "Cancel action";
-  // stopButton.appendChild(stopButtonSpan);
-  if(isPhone){
-    stopButton.addEventListener('touchstart', function(event){
-      cancelCurrentAction();
-    });
-  } else {
-    stopButton.addEventListener('click', e => {
-      cancelCurrentAction();
-    });
-  }
-  document.body.appendChild(stopButton);
-});
+//    stopButton = document.createElement("div");
+//    stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
+//    stopButton.setAttribute("style", "z-index: 9999;");
+//    stopButtonSpan = document.createElement("span");
+//    stopButtonSpan.innerHTML = "Cancel action";
+//    stopButton.appendChild(stopButtonSpan);
+//   if(isPhone){
+//     stopButton.addEventListener('touchstart', function(event){
+//       cancelCurrentAction();
+//     });
+//   } else {
+//     stopButton.addEventListener('click', e => {
+//       cancelCurrentAction();
+//     });
+//   }
+//   document.body.appendChild(stopButton);
+// });
 
 // Connection to ROSbridge server websocket
 var ros = new ROSLIB.Ros({
