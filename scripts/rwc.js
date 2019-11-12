@@ -366,7 +366,7 @@ $(document).ready(function(){
 //     });
 //   }
 //   document.body.appendChild(stopButton);
-// });
+});
 
 // Connection to ROSbridge server websocket
 var ros = new ROSLIB.Ros({
