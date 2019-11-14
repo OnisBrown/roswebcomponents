@@ -1123,7 +1123,6 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
     var event = message.event;
     if (event === 13 || event === 16){
       taskEventsTopic.unsubscribe();
-      talking = false;
       goal.dispatchEvent(resultEvent);
 
     }
