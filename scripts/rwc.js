@@ -568,30 +568,35 @@ function cancelCurrentAction(){
 
 // Modal (y/n dialogue) functions
 function rwcActionYesNoModal(text) {
-  $("[role=modal]").load("modal.html", function() {
-    $('[role=dialog]').modal({
-      backdrop: 'static',
-      keyboard: false,
-      focus: true
-    });
-    $('.modal-title').html(text.split("_").join(" "));
-    $('[role=dialog]').modal('show');
+  try{
+    $("[role=modal]").load("modal.html", function() {
+      $('[role=dialog]').modal({
+        backdrop: 'static',
+        keyboard: false,
+        focus: true
+      });
+      $('.modal-title').html(text.split("_").join(" "));
+      $('[role=dialog]').modal('show');
 
-    $('#no_btn').mousedown(function(){
-      Signal_buttonPressed("modalNo");
+      $('#no_btn').mousedown(function(){
+        Signal_buttonPressed("modalNo");
+      });
+      $('#yes_btn').mousedown(function(){
+        Signal_buttonPressed("modalYes");
+      });
     });
-    $('#yes_btn').mousedown(function(){
-      Signal_buttonPressed("modalYes");
-    });
-  });
-  console.log("showing dialog");
-  showModalReceiverTopicString.data = text.split(" ").join("_");
-  showModalReceiverTopic.publish(showModalReceiverTopicString);
+    console.log("showing dialog");
+    showModalReceiverTopicString.data = text.split(" ").join("_");
+    showModalReceiverTopic.publish(showModalReceiverTopicString);
 
-  $("[role=modal]").on('hide.bs.modal', function(){
-    showModalCloseReceiverTopicString.data = text;
-    showModalCloseReceiverTopic.publish(showModalCloseReceiverTopicString);
-  });
+    $("[role=modal]").on('hide.bs.modal', function(){
+      showModalCloseReceiverTopicString.data = text;
+      showModalCloseReceiverTopic.publish(showModalCloseReceiverTopicString);
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
 }
 
 function Close_modal(text) {
