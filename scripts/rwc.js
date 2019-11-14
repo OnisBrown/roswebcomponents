@@ -169,7 +169,7 @@ $("head").append(cssLink);
 
 function robot_speech_bubble(text) {
   bubble_el = '<p class="speech" style="display:none">' + text + '</p>';
-  $("body").append(bubble_el);
+  $("#speech").append(bubble_el);
   return $(".speech");
 }
 
