@@ -720,7 +720,7 @@ function rwcActionSetPoseRelative(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
@@ -771,7 +771,7 @@ function rwcActionSetPoseMap(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal =new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
@@ -811,7 +811,7 @@ function rwcActionGoToNode(node_name, no_orientation = false){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
@@ -888,7 +888,7 @@ function rwcActionSay(phrase){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
@@ -923,7 +923,7 @@ function rwcActionGazeAtNearestPerson(secs){
     topic_name: configJSON.listeners.nearest_person_pose.topicName
   };
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: gazeActionClient,
     goalMessage: msg
   });
@@ -958,7 +958,7 @@ function rwcActionGazeAtPosition(x, y, z, secs){
     topic_name: configJSON.listeners.gaze.topicName
   };
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: gazeActionClient,
     goalMessage: msg
   });
@@ -1110,7 +1110,7 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
   }
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1123,7 +1123,9 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
     var event = message.event;
     if (event === 13 || event === 16){
       taskEventsTopic.unsubscribe();
+      talking = false;
       goal.dispatchEvent(resultEvent);
+
     }
   });
   return $(goal);
@@ -1145,7 +1147,7 @@ function rwcActionGoToAndDescribeExhibit(name_or_key, duration=60*30){
   }
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1177,7 +1179,7 @@ function rwcActionStartTour(name_or_key, duration=60*60){
   });
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
