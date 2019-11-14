@@ -615,7 +615,7 @@ function Signal_buttonPressed(button) {
 
 showModalTopic.subscribe(function(msg) {
   console.log('listener interface show modal msg.data='+msg.data);
-  rwcActionYesNoModal(msg.data);
+  //rwcActionYesNoModal(msg.data);
 });
 
 showModalCloseTopic.subscribe(function(msg) {
