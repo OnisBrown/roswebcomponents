@@ -1116,6 +1116,7 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
   busyInterface();
 
   var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1123,13 +1124,12 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
       freeInterface();
   },);
 
-
   taskEventsTopic.subscribe(function(message){
     var event = message.event;
     if (event === 13 || event === 16){
       taskEventsTopic.unsubscribe();
       goal.dispatchEvent(resultEvent);
-
+      $('#goalSpan').remove();
     }
   });
   return $(goal);
@@ -1152,6 +1152,7 @@ function rwcActionGoToAndDescribeExhibit(name_or_key, duration=60*30){
   busyInterface();
 
   var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1184,6 +1185,7 @@ function rwcActionStartTour(name_or_key, duration=60*60){
   busyInterface();
 
   var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
