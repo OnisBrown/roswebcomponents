@@ -1130,6 +1130,8 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
       taskEventsTopic.unsubscribe();
       goal.dispatchEvent(resultEvent);
       $('#goalSpan').remove();
+      var elem = document.getElementById("goalSpan");
+      elem.remove();
     }
   });
   return $(goal);
