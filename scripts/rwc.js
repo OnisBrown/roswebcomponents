@@ -20,7 +20,7 @@ var JSONreq = $.getJSON("rwc-config.json", function(json){
 
   // Set rosbridge_websocket URL
   ros = new ROSLIB.Ros({
-    url: configJSON["rosbridge_websocket_url"]
+    url: configJSON.rosbridge_websocket_url
   });
   console.log("rosbridge_websocket URL: " +  ros.socket.url);
 
@@ -169,7 +169,7 @@ $("head").append(cssLink);
 
 function robot_speech_bubble(text) {
   bubble_el = '<p class="speech" style="display:none">' + text + '</p>';
-  $("body").append(bubble_el);
+  $("#speech").append(bubble_el);
   return $(".speech");
 }
 
@@ -350,27 +350,27 @@ $(document).ready(function(){
   document.body.appendChild(modalDiv);
 
   // Create and append stop button
-  stopButton = document.createElement("div");
-  stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
-  stopButton.setAttribute("style", "z-index: 9999;");
-  stopButtonSpan = document.createElement("span");
-  stopButtonSpan.innerHTML = "Cancel action";
-  stopButton.appendChild(stopButtonSpan);
-  if(isPhone){
-    stopButton.addEventListener('touchstart', function(event){
-      cancelCurrentAction();
-    });
-  } else {
-    stopButton.addEventListener('click', e => {
-      cancelCurrentAction();
-    });
-  }
-  document.body.appendChild(stopButton);
+//    stopButton = document.createElement("div");
+//    stopButton.setAttribute("class", "cancel-button rwc-button-action-start");
+//    stopButton.setAttribute("style", "z-index: 9999;");
+//    stopButtonSpan = document.createElement("span");
+//    stopButtonSpan.innerHTML = "Cancel action";
+//    stopButton.appendChild(stopButtonSpan);
+//   if(isPhone){
+//     stopButton.addEventListener('touchstart', function(event){
+//       cancelCurrentAction();
+//     });
+//   } else {
+//     stopButton.addEventListener('click', e => {
+//       cancelCurrentAction();
+//     });
+//   }
+//   document.body.appendChild(stopButton);
 });
 
 // Connection to ROSbridge server websocket
 var ros = new ROSLIB.Ros({
-    url: 'ws://localhost:9090'
+    url: "ws://10.82.0.70:9090"
 });
 
 ros.on('connection', function(){
@@ -568,30 +568,35 @@ function cancelCurrentAction(){
 
 // Modal (y/n dialogue) functions
 function rwcActionYesNoModal(text) {
-  $("[role=modal]").load("modal.html", function() {
-    $('[role=dialog]').modal({
-      backdrop: 'static',
-      keyboard: false,
-      focus: true
-    });
-    $('.modal-title').html(text.split("_").join(" "));
-    $('[role=dialog]').modal('show');
+  try{
+    $("[role=modal]").load("modal.html", function() {
+      $('[role=dialog]').modal({
+        backdrop: 'static',
+        keyboard: false,
+        focus: true
+      });
+      $('.modal-title').html(text.split("_").join(" "));
+      $('[role=dialog]').modal('show');
 
-    $('#no_btn').mousedown(function(){
-      Signal_buttonPressed("modalNo");
+      $('#no_btn').mousedown(function(){
+        Signal_buttonPressed("modalNo");
+      });
+      $('#yes_btn').mousedown(function(){
+        Signal_buttonPressed("modalYes");
+      });
     });
-    $('#yes_btn').mousedown(function(){
-      Signal_buttonPressed("modalYes");
-    });
-  });
-  console.log("showing dialog");
-  showModalReceiverTopicString.data = text.split(" ").join("_");
-  showModalReceiverTopic.publish(showModalReceiverTopicString);
+    console.log("showing dialog");
+    showModalReceiverTopicString.data = text.split(" ").join("_");
+    showModalReceiverTopic.publish(showModalReceiverTopicString);
 
-  $("[role=modal]").on('hide.bs.modal', function(){
-    showModalCloseReceiverTopicString.data = text;
-    showModalCloseReceiverTopic.publish(showModalCloseReceiverTopicString);
-  });
+    $("[role=modal]").on('hide.bs.modal', function(){
+      showModalCloseReceiverTopicString.data = text;
+      showModalCloseReceiverTopic.publish(showModalCloseReceiverTopicString);
+    });
+  }
+  catch(e){
+    console.log(e);
+  }
 }
 
 function Close_modal(text) {
@@ -610,7 +615,7 @@ function Signal_buttonPressed(button) {
 
 showModalTopic.subscribe(function(msg) {
   console.log('listener interface show modal msg.data='+msg.data);
-  rwcActionYesNoModal(msg.data);
+  //rwcActionYesNoModal(msg.data);
 });
 
 showModalCloseTopic.subscribe(function(msg) {
@@ -720,14 +725,15 @@ function rwcActionSetPoseRelative(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
 
   goal.on('result', function (status) {
-    console.log(goal.status.text);
-    freeInterface();
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -770,14 +776,15 @@ function rwcActionSetPoseMap(x, y, z, quaternion = {x: 0, y: 0, z: 0, w: 1}){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal =new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
 
   goal.on('result', function (status) {
-    console.log(goal.status.text);
-    freeInterface();
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if (goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
@@ -809,15 +816,15 @@ function rwcActionGoToNode(node_name, no_orientation = false){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
 
   goal.on('result', function (status) {
     status = goal.status.status;
-    console.log("Action status: " + goalStatusNames[status]);
     if (goalStatusNames[status] !== "PENDING"){freeInterface();}
+    console.log("Action status: " + goalStatusNames[status]);
   });
 
   goal.send();
@@ -886,7 +893,7 @@ function rwcActionSay(phrase){
   currentActionTopicString.data = currentActionClient.actionName;
   currentActionTopic.publish(currentActionTopicString);
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: actionClient,
     goalMessage: msg
   });
@@ -894,72 +901,130 @@ function rwcActionSay(phrase){
   goal.on('result', function (status) {
     status = goal.status.status;
     console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
   console.log("Goal '" + serverName + "/goal' sent!");
+  return goal;
+}
 
+function rwcActionGazeAtNearestPerson(secs){
+  var serverName = configJSON.actions.actionServers.gaze.actionServerName;
+  var actionName = configJSON.actions.actionServers.gaze.actionServerName;
+
+  var gazeActionClient = new ROSLIB.ActionClient({
+    ros: ros,
+    serverName: serverName,
+    actionName: actionName
+  });
+
+  currentActionClient = gazeActionClient;
+  currentActionTopicString.data = currentActionClient.actionName;
+  currentActionTopic.publish(currentActionTopicString);
+
+  msg = {
+    runtime_sec: secs,
+    topic_name: configJSON.listeners.nearest_person_pose.topicName
+  };
+
+  var goal = new ROSLIB.Goal({
+    actionClient: gazeActionClient,
+    goalMessage: msg
+  });
+
+  goal.on('result', function (status) {
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
+  });
+
+  goal.send();
+  console.log("Goal '" + serverName + "/goal' sent!");
   return goal;
 }
 
 // Action function 'rwcActionGazeAtPosition'
 function rwcActionGazeAtPosition(x, y, z, secs){
-  var rwcPoseTopic = new ROSLIB.Topic({
-    ros : ros,
-    name : configJSON.listeners.gaze.topicName,
-    messageType : configJSON.listeners.gaze.topicMessageType
-  });
-
-  header = {
-    seq: 0,
-    stamp: {
-      secs: 1,
-      nsecs:1},
-    frame_id: "/map"
-  };
-  position = new ROSLIB.Vector3(null);
-  position.x = x;
-  position.y = y;
-  position.z = z;
-  orientation = new ROSLIB.Quaternion({x:0, y:0, z:0, w:1.0});
-  var poseStamped = new ROSLIB.Message({
-    header: header,
-    pose: {
-      position: position,
-      orientation: orientation
-    }
-  });
-  rwcPoseTopic.publish(poseStamped);
-  console.log("Gaze pose published...");
-
+  var serverName = configJSON.actions.actionServers.gaze.actionServerName;
+  var actionName = configJSON.actions.actionServers.gaze.actionServerName;
   var gazeActionClient = new ROSLIB.ActionClient({
     ros: ros,
-    serverName: configJSON.actions.actionServers.gaze.actionServerName,
-    actionName: configJSON.actions.actionServers.gaze.actionName
+    serverName: serverName,
+    actionName: actionName
   });
 
   currentActionClient = gazeActionClient;
+  currentActionTopicString.data = currentActionClient.actionName;
+  currentActionTopic.publish(currentActionTopicString);
 
   msg = {
     runtime_sec: secs,
     topic_name: configJSON.listeners.gaze.topicName
   };
 
-  goal = new ROSLIB.Goal({
+  var goal = new ROSLIB.Goal({
     actionClient: gazeActionClient,
     goalMessage: msg
   });
 
   goal.on('result', function (status) {
-    console.log("Action " + configJSON.actions.actionServers.gaze.actionServerName + " completed!");
+    status = goal.status.status;
+    console.log("Action status: " + goalStatusNames[status]);
+    if(goalStatusNames[status] !== "PENDING"){freeInterface();}
   });
 
   goal.send();
-  console.log("Goal " + configJSON.actions.actionServers.gaze.actionServerName + "/goal sent!");
-
+  console.log("Goal " + serverName + "/goal sent!");
+  subGazeAtPosition(x,y,z);
   return goal;
 }
 
+function subGazeAtPosition(x,y,z){
+  var rwcPoseTopic = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.gaze.topicName,
+    messageType : configJSON.listeners.gaze.topicMessageType
+  });
+  var poseStamped = new ROSLIB.Message({
+    header: {
+      seq: 0,
+      stamp: {
+        secs: 0,
+        nsecs: 0
+      },
+      frame_id: "/map"
+    },
+    pose: {
+      position: {
+        x: x,
+        y: y,
+        z: z
+      },
+      orientation: {
+        x:0,
+        y:0,
+        z:0,
+        w:1.0
+      }
+    }
+  });
+
+  var secs = 0.5;
+  var timer = 0;
+  var limit = secs*10;
+  var pubRate = setInterval(pubby, 100);
+
+  function pubby(){ //publish the pose 10 times a second for a number of seconds.
+    rwcPoseTopic.publish(poseStamped);
+    timer+=1;
+    if (timer >= limit){
+      clearInterval(pubRate);
+    }
+  }
+
+  console.log("Gaze pose published to " + rwcPoseTopic.name);
+}
 
 // Action function 'rwcActionCustom'
 function rwcActionCustom(actionComponent){
@@ -1001,6 +1066,39 @@ function rwcActionCustom(actionComponent){
   });
 }
 
+
+//function for starting recording for google dialogue manager.
+function rwcActionStartDialogue(){
+  var startDiaTop = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.actions.topics.dialogue.topicName,
+    messageType : configJSON.actions.topics.dialogue.topicMessageType
+  });
+
+  var msg8 = new ROSLIB.Message({
+    header:{
+      seq: 0,
+      stamp:{
+        secs: 0,
+        nsecs: 0
+      },
+      frame_id: '',
+    },
+    goal_id:{
+      stamp:{
+        secs: 0,
+        nsecs: 0
+      },
+      id: ''
+    },
+    goal:{
+      msg: false
+    }
+  });
+  startDiaTop.publish();
+  console.log("Listnening......");
+}
+
 // Action function 'rwcActionDescribeExhibit'
 function rwcActionDescribeExhibit(name_or_key, duration=60*5){
   var isKey;
@@ -1017,7 +1115,8 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
   }
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1025,12 +1124,14 @@ function rwcActionDescribeExhibit(name_or_key, duration=60*5){
       freeInterface();
   },);
 
-
   taskEventsTopic.subscribe(function(message){
     var event = message.event;
     if (event === 13 || event === 16){
       taskEventsTopic.unsubscribe();
       goal.dispatchEvent(resultEvent);
+      $('#goalSpan').remove();
+      var elem = document.getElementById("goalSpan");
+      elem.remove();
     }
   });
   return $(goal);
@@ -1052,7 +1153,8 @@ function rwcActionGoToAndDescribeExhibit(name_or_key, duration=60*30){
   }
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1084,7 +1186,8 @@ function rwcActionStartTour(name_or_key, duration=60*60){
   });
   busyInterface();
 
-  goal = document.createElement("span");
+  var goal = document.createElement("span");
+  goal.setAttribute('id', "goalSpan"); //set id of span so it can be deleted
   var resultEvent = new Event('result');
 
   goal.addEventListener('result', function(status) {
@@ -1346,6 +1449,48 @@ async function rwcListenerGetNumberOfPeople(listenerComponent = null, returnTopi
   }
 }
 
+// Listener function 'rwcListenerGetnearestDist'
+async function rwcListenerGetNearestDist(listenerComponent = null, returnTopic = false){
+  // Topic info loaded from rwc-config JSON file
+  var listener = new ROSLIB.Topic({
+    ros : ros,
+    name : configJSON.listeners.nearest_person_dist.topicName,
+    messageType : configJSON.listeners.nearest_person_dist.topicMessageType
+  });
+
+  if (returnTopic){
+    return listener;
+  } else {
+    // promise function called and function execution halts until
+    // the promise is resolved
+    rwcNearestDist = await subPeopleDist(listener, listenerComponent);
+    return rwcNearestDist;
+  }
+}
+
+// Promise returns value 50ms after subscribing to topic,
+// preventing old or undefined values from being returned
+function subPeopleDist(listener, listenerComponent = null){
+  return new Promise(function(resolve) {
+    listener.subscribe(function(message) {
+      rwcNearestDist = message.min_distance;
+      if (listenerComponent === null){
+        listener.unsubscribe();
+      }
+      else if (listenerComponent.dataset.live === "false"){
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcPeoplePositions + "</span>";
+        listener.unsubscribe();
+      }
+      else {
+        listenerComponent.shadowRoot.innerHTML = "<span>" + rwcPeoplePositions + "</span>";
+      }
+      setTimeout(function(){
+        resolve(rwcNearestDist);
+      }, 50);
+    });
+  });
+}
+
 // Listener function 'rwcListenerGetNode'
 async function rwcListenerGetNode(listenerComponent = null, returnTopic = false){
   // Topic info loaded from rwc-config JSON file
@@ -1469,6 +1614,35 @@ function subVolumePercent(listener, listenerComponent = null){
       }
       setTimeout(function(){
         resolve(rwcVolumePercent);
+      }, 50);
+    });
+  });
+}
+
+// Listener function 'rwcListenerGetDialogue'
+async function rwcListenerGetDialogue(){
+  var transTopic = new ROSLIB.Topic({
+    ros: ros,
+    name: configJSON.listeners.dialogue.topicName,
+    messageType: configJSON.listeners.dialogue.topicMessageType
+  });
+
+  console.log("Thinking...");
+  var rwcTranscript = await subDialogue(transTopic);
+  console.log("Transcript recieved.")
+  return rwcTranscript;
+}
+
+function subDialogue(listener, listenerComponent = null){
+  return new Promise(function(resolve) {
+    listener.subscribe(function(message) {
+      var rwcTranscript = message.result.transcription;
+      if (listenerComponent === null){
+        listener.unsubscribe();
+      }
+      setTimeout(function(){
+        console.log("you said: " + rwcTranscript);
+        resolve(rwcTranscript);
       }, 50);
     });
   });
