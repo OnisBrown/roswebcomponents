@@ -384,7 +384,12 @@ ros.on('error', function(){
     busyInterface();
     $(".spin").spin("show");
     setTimeout(function(){
-      location.reload();
+			if(confirm('connection lost. refresh page?')){
+				location.reload();
+			}
+      else{
+				console.log('not refreshing');
+			}
     }, 5000);
 });
 
@@ -393,7 +398,12 @@ ros.on('close', function(){
     busyInterface();
     $(".spin").spin("show");
     setTimeout(function(){
-      location.reload();
+			if(confirm('connection lost. refresh page?')){
+				location.reload();
+			}
+      else{
+				console.log('not refreshing');
+			}
     }, 5000);
 });
 
